@@ -58,4 +58,13 @@ public class UserService {
         // DB에 반영
         return UserDto.Response.fromEntity(user);
     }
+
+    // DELETE
+    @Transactional
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new IllegalArgumentException("사용자 찾을 수 없음 : " + id);
+        }
+        userRepository.deleteById(id);
+    }
 }
