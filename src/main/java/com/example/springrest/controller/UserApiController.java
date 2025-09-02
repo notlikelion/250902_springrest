@@ -51,4 +51,20 @@ public class UserApiController {
     public ResponseEntity<UserDto.Response> getUserById(@PathVariable Long id) {
         return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(id));
     }
+
+    // 사용자 정보 수정 (PUT)
+    // GET, POST -> 웹 PAGE
+    // REST -> HTTP Verb. GET, POST, PUT, DELETE, ...
+    @PutMapping("/{id}")
+    public ResponseEntity<UserDto.Response> updateUser(@PathVariable Long id, @RequestBody UserDto.UpdateRequest dto) {
+        UserDto.Response updatedUser = userService.updateUser(id, dto);
+//        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
 }
