@@ -3,12 +3,10 @@ package com.example.springrest.controller;
 import com.example.springrest.dto.UserDto;
 import com.example.springrest.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -37,5 +35,14 @@ public class UserApiController {
         // -> Restful API (JSON) / Thymeleaf (Model, Object)
 
         return ResponseEntity.ok(userService.findAllUsers());
+    }
+
+    // 사용자 생성
+    // POST localhost:8080/api/users
+    @PostMapping // ("/")
+    public ResponseEntity<UserDto.Response> createUser(@RequestBody UserDto.CreateRequest dto) {
+        // JSON Body -> Form 하나하나 input. JSON {키/프로퍼티이름:값}
+        UserDto.Response response = userService.createUser(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
