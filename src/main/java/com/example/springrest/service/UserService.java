@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor // 의존성 주입
 @Transactional(readOnly = true) // 읽기 조회
@@ -27,6 +30,32 @@ public class UserService {
         return UserDto.Response.fromEntity(savedUser);
     }
 
-    // READ
+    // READ (ONE, ALL)
+    // ONE -> id, pk
+    public UserDto.Response findUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 찾을 수 없음 : " + id));
+        return UserDto.Response.fromEntity(user);
+    }
+    // ALL -> 테이블 자체를 조회 (정렬이 들어갈 수 있다 -> pk asc)
+    public List<UserDto.Response> findAllUsers() {
+        return userRepository.findAll()
+                .stream()
+                .map(UserDto.Response::fromEntity)
+                .toList();
+//                .collect(Collectors.toList());
+    }
 
+    // UPDATE
+    @Transactional
+    public UserDto.Response updateUser(Long id, UserDto.UpdateRequest dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("사용자 찾을 수 없음 : " + id));
+        // Dirty Checking
+        user.update(
+                dto.username(), dto.email()
+        ); // 아예 해당 내용들을 모두 교체 // put.
+        // DB에 반영
+        return UserDto.Response.fromEntity(user);
+    }
 }
