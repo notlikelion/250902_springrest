@@ -45,4 +45,10 @@ public class UserApiController {
         UserDto.Response response = userService.createUser(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    // 특정 사용자 조회 : 숫자로 된 개별 id/pk
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto.Response> getUserById(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.findUserById(id));
+    }
 }

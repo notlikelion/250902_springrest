@@ -6,5 +6,6 @@ spring:
   jpa:
     hibernate:
       # prod에서 덮어씌워줄 것 validate로
+#      ddl-auto: create
       ddl-auto: update
     show-sql: true
